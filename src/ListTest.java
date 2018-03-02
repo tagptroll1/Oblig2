@@ -2,30 +2,33 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTimeout;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ListTest {
     IList<Integer> myList;
 
     @BeforeEach
     void setup(){
-        myList = new LinkedList<Integer>();
+        myList = new LinkedList<>();
     }
     // Tester for deloppg 1.1 - 0 elements
     @Test
     void test_first_zero(){
-
+        assertThrows(NoSuchElementException.class, ()-> myList.first());
     }
 
     @Test
     void test_rest_zero(){
+
+        assertEquals(0, myList.rest().size());
+        assertTrue(myList.rest() instanceof LinkedList);
+        assertNotEquals(myList, myList.rest());
+    }
+
+    @Test
+    void test_add_zero(){
 
     }
 
@@ -51,6 +54,11 @@ class ListTest {
     }
 
     @Test
+    void test_add_one(){
+
+    }
+
+    @Test
     void test_put_one(){
 
     }
@@ -68,6 +76,11 @@ class ListTest {
 
     @Test
     void test_rest_more(){
+
+    }
+
+    @Test
+    void test_add_more(){
 
     }
 
