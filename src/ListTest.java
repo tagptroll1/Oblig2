@@ -1,5 +1,4 @@
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,122 +8,119 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ListTest {
-    IList<Integer> listen;
-    IList<Integer> enIListen;
+    IList<Integer> myList;
+
     @BeforeEach
     void setup(){
-        listen = new LinkedList<>();
-        enIListen = new LinkedList<>(2);
+        myList = new LinkedList<>();
+    }
+    // Tester for deloppg 1.1 - 0 elements
+    @Test
+    void test_first_zero(){
+        assertThrows(NoSuchElementException.class, ()-> myList.first());
     }
 
     @Test
-    void testEmptyFirst(){
-        assertThrows(NoSuchElementException.class, ()-> listen.first());
-        assertTrue(listen.isEmpty());
+    void test_rest_zero(){
+
+        assertEquals(0, myList.rest().size());
+        assertTrue(myList.rest() instanceof LinkedList);
+        assertNotEquals(myList, myList.rest());
     }
 
     @Test
-    void testEmptyRest(){
-        assertEquals(0, listen.rest().size());
-        assertTrue(listen.isEmpty());
-
-        IList<Integer> restList = listen.rest();
-
-        assertTrue(restList instanceof LinkedList);
-        assertNotEquals(listen, restList);
-        assertTrue(restList.isEmpty());
-        assertEquals(0, restList.size());
-        assertThrows(NoSuchElementException.class, restList::first);
-    }
-
-    @Test
-    void testEmptyAdd(){
-        listen.add(5);
-        assertEquals(new Integer(5), listen.first());
-        assertEquals(1, listen.size());
-        assertTrue(listen.contains(5));
-        assertFalse(listen.isEmpty());
-    }
-
-    @Test
-    void testEmptyPut(){
-        listen.put(9);
-        assertEquals(new Integer(9), listen.first());
-        assertFalse(listen.isEmpty());
-        assertEquals(1, listen.size());
-        assertTrue(listen.contains(9));
+    void test_add_zero(){
+        // sjekk at den er tom først, add et par integer og sjekk at size går opp
+        // Sjekk at 5 og 2 er i listen, random sjekk at 0 ikke er der og at den ikke er "tom"
+        assertTrue(myList.isEmpty());
+        myList.add(5);
+        assertEquals(1, myList.size());
+        assertEquals(5, (int) myList.first());
+        myList.add(2);
+        assertEquals(2, myList.size());
+        //Make sure first er still.. first..
+        assertEquals(5, (int) myList.first());
+        assertTrue(myList.contains(5));
+        assertTrue(myList.contains(2));
+        assertFalse(myList.contains(0));
+        assertFalse(myList.isEmpty());
 
     }
 
     @Test
-    void testEmptyRemove(){
-        assertThrows(NoSuchElementException.class, ()-> listen.remove());
+    void test_put_zero(){
+        assertTrue(myList.isEmpty());
+        myList.put(3);
+        assertEquals(1, myList.size());
+        assertEquals(3, (int) myList.first());
+        myList.put(7);
+        assertEquals(2, myList.size());
+        assertEquals(3, (int) myList.first());
+        assertTrue(myList.contains(3));
+        assertTrue(myList.contains(7));
+        assertFalse(myList.contains(0));
+        assertFalse(myList.isEmpty());
     }
 
     @Test
-    void testOneFirst(){
-        assertFalse(enIListen.isEmpty());
-        assertEquals(new Integer(2), enIListen.first());
-        assertEquals(1, enIListen.size());
+    void test_remove_zero(){
+        // Forventer at den straight ut kaster NoSuchElementException
+        assertThrows(NoSuchElementException.class, ()->myList.remove());
+        assertTrue(myList.isEmpty());
     }
 
+    // Test for deloppg 1.2 - 1 element
     @Test
-    void testOneRest(){
-        assertEquals(1, enIListen.rest().size());
-        assertFalse(enIListen.isEmpty());
-
-        IList<Integer> restList = enIListen.rest();
-
-        assertTrue(restList instanceof LinkedList);
-        assertNotEquals(enIListen, restList);
-        assertTrue(restList.isEmpty());
-        assertEquals(0, restList.size());
-        assertThrows(NoSuchElementException.class,  restList::first);
-    }
-
-    @Test
-    void testOneAdd(){
-        assertEquals(1, enIListen.size());
-        assertTrue(enIListen.add(69));
-        assertFalse(enIListen.isEmpty());
-        assertEquals(2, enIListen.size());
-        assertEquals(new Integer(2), enIListen.first());
-    }
-
-    @Test
-    void testOnePut(){
+    void test_first_one(){
 
     }
 
     @Test
-    void testOneRemove(){
+    void test_rest_one(){
 
     }
 
     @Test
-    void testManyFirst(){
+    void test_add_one(){
 
     }
 
     @Test
-    void testManyRest(){
+    void test_put_one(){
 
     }
 
     @Test
-    void testManyAdd(){
+    void test_remove_one(){
+
+    }
+
+    // Test for deloppg 1.3 - 2 or more elements
+    @Test
+    void test_first_more(){
 
     }
 
     @Test
-    void testManyPut(){
+    void test_rest_more(){
 
     }
 
     @Test
-    void testManyRemove(){
+    void test_add_more(){
 
     }
+
+    @Test
+    void test_put_more(){
+
+    }
+
+    @Test
+    void test_remove_more(){
+
+    }
+
     @Test
     void oppg8_sortIntegers() {
         // Se oppgave 8
@@ -207,9 +203,9 @@ class ListTest {
 
         List<Integer> target = Arrays.asList(1, 2, 3, 4, 5);
 
-
-        for (int t : target) {
-            if (result.remove() != t) {
+        int n = result.remove();
+        for (Integer t : target) {
+            if (n != t) {
                 fail("Result of map gives the wrong value.");
             }
         }
