@@ -1,3 +1,4 @@
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,17 +30,43 @@ class ListTest {
 
     @Test
     void test_add_zero(){
+        // sjekk at den er tom først, add et par integer og sjekk at size går opp
+        // Sjekk at 5 og 2 er i listen, random sjekk at 0 ikke er der og at den ikke er "tom"
+        assertTrue(myList.isEmpty());
+        myList.add(5);
+        assertEquals(1, myList.size());
+        assertEquals(5, (int) myList.first());
+        myList.add(2);
+        assertEquals(2, myList.size());
+        //Make sure first er still.. first..
+        assertEquals(5, (int) myList.first());
+        assertTrue(myList.contains(5));
+        assertTrue(myList.contains(2));
+        assertFalse(myList.contains(0));
+        assertFalse(myList.isEmpty());
 
     }
 
     @Test
     void test_put_zero(){
-
+        assertTrue(myList.isEmpty());
+        myList.put(3);
+        assertEquals(1, myList.size());
+        assertEquals(3, (int) myList.first());
+        myList.put(7);
+        assertEquals(2, myList.size());
+        assertEquals(3, (int) myList.first());
+        assertTrue(myList.contains(3));
+        assertTrue(myList.contains(7));
+        assertFalse(myList.contains(0));
+        assertFalse(myList.isEmpty());
     }
 
     @Test
     void test_remove_zero(){
-
+        // Forventer at den straight ut kaster NoSuchElementException
+        assertThrows(NoSuchElementException.class, ()->myList.remove());
+        assertTrue(myList.isEmpty());
     }
 
     // Test for deloppg 1.2 - 1 element
