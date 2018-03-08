@@ -8,11 +8,17 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ListTest {
-    IList<Integer> myList;
+    private IList<Integer> myList;
+    private IList<Integer> enList;
+    private IList<Integer> flerList;
 
     @BeforeEach
     void setup(){
         myList = new LinkedList<>();
+        enList = new LinkedList<>(69);
+        flerList = new LinkedList<>(420);
+        flerList.add(666);
+        flerList.put(8008);
     }
     // Tester for deloppg 1.1 - 0 elements
     @Test
@@ -22,10 +28,8 @@ class ListTest {
 
     @Test
     void test_rest_zero(){
-
-        assertEquals(0, myList.rest().size());
-        assertTrue(myList.rest() instanceof LinkedList);
-        assertNotEquals(myList, myList.rest());
+        test_rest_zero_or_one(myList);
+        assertTrue(myList.isEmpty());
     }
 
     @Test
@@ -55,7 +59,7 @@ class ListTest {
         assertEquals(3, (int) myList.first());
         myList.put(7);
         assertEquals(2, myList.size());
-        assertEquals(3, (int) myList.first());
+        assertEquals(7, (int) myList.first());
         assertTrue(myList.contains(3));
         assertTrue(myList.contains(7));
         assertFalse(myList.contains(0));
@@ -72,52 +76,131 @@ class ListTest {
     // Test for deloppg 1.2 - 1 element
     @Test
     void test_first_one(){
-
+        assertFalse(enList.isEmpty());
+        assertEquals(69, (int) enList.first());
+        assertTrue(enList.contains(69));
     }
 
     @Test
     void test_rest_one(){
-
+        test_rest_zero_or_one(enList);
+        assertFalse(enList.isEmpty());
     }
 
     @Test
     void test_add_one(){
 
+        assertEquals(69, (int) enList.first());
+        assertTrue(enList.add(123));
+        assertEquals(69, (int) enList.first());
+        assertEquals(2, enList.size());
+        assertTrue(enList.add(777));
+        assertEquals(69, (int) enList.first());
+        assertEquals(3, enList.size());
+        assertTrue(enList.contains(123));
+        assertTrue(enList.contains(777));
     }
 
     @Test
     void test_put_one(){
-
+        assertEquals(69, (int) enList.first());
+        assertTrue(enList.put(321));
+        assertEquals(321, (int) enList.first());
+        assertEquals(2, enList.size());
+        assertTrue(enList.put(11111));
+        assertEquals(11111, (int) enList.first());
+        assertEquals(3, enList.size());
+        assertTrue(enList.contains(321));
+        assertTrue(enList.contains(11111));
     }
 
     @Test
     void test_remove_one(){
-
+        assertFalse(enList.isEmpty());
+        int removed = enList.remove();
+        assertEquals(69, removed);
+        assertTrue(enList.isEmpty());
+        assertThrows(NoSuchElementException.class, ()-> enList.remove());
     }
+    // Siden rest fungere likt for tom og liste med 1 har jeg en felles sjekk for dem her
+    @Test
+    void test_rest_zero_or_one(IList<Integer> listo){
+        IList<Integer> restList = listo.rest();
+        assertEquals(0, restList.size());
+        assertTrue(restList instanceof LinkedList);
+        assertNotEquals(listo, restList);
 
+        assertTrue(restList.isEmpty());
+        assertThrows(NoSuchElementException.class, restList::first);
+    }
     // Test for deloppg 1.3 - 2 or more elements
     @Test
     void test_first_more(){
-
+        assertFalse(flerList.isEmpty());
+        assertEquals(3, flerList.size());
+        assertEquals(8008, (int) flerList.first());
     }
 
     @Test
     void test_rest_more(){
-
+        IList<Integer> restList = flerList.rest();
+        assertFalse(restList.isEmpty());
+        assertEquals(2, restList.size());
+        assertEquals(8008, (int) flerList.first());
     }
 
     @Test
     void test_add_more(){
-
+        assertEquals(8008, (int) flerList.first());
+        assertEquals(3, flerList.size());
+        assertTrue(flerList.add(4444));
+        assertEquals(4, flerList.size());
+        assertEquals(8008, (int) flerList.first());
+        assertTrue(flerList.add(42));
+        assertEquals(5, flerList.size());
+        assertEquals(8008, (int) flerList.first());
+        assertTrue(flerList.contains(42));
+        assertTrue(flerList.contains(4444));
+        assertTrue(flerList.contains(420));
+        assertTrue(flerList.contains(666));
+        assertTrue(flerList.contains(8008));
     }
 
     @Test
     void test_put_more(){
-
+        assertEquals(8008, (int) flerList.first());
+        assertEquals(3, flerList.size());
+        assertTrue(flerList.put(4444));
+        assertEquals(4, flerList.size());
+        assertEquals(4444, (int) flerList.first());
+        assertTrue(flerList.put(42));
+        assertEquals(5, flerList.size());
+        assertEquals(42, (int) flerList.first());
+        assertTrue(flerList.contains(42));
+        assertTrue(flerList.contains(4444));
+        assertTrue(flerList.contains(420));
+        assertTrue(flerList.contains(666));
+        assertTrue(flerList.contains(8008));
     }
 
     @Test
     void test_remove_more(){
+        int removed;
+
+        assertFalse(flerList.isEmpty());
+        removed = flerList.remove();
+        assertEquals(420, removed);
+        assertEquals(2, flerList.size());
+
+        assertTrue(flerList.remove(8008));
+        assertEquals(1, flerList.size());
+        assertEquals(666, (int) flerList.first());
+        assertFalse(flerList.isEmpty());
+
+        removed = flerList.remove();
+        assertEquals(666, removed);
+        assertEquals(0, flerList.size());
+        assertTrue(flerList.isEmpty());
 
     }
 

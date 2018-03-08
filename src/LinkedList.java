@@ -6,6 +6,21 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class LinkedList<E> implements IList<E>{
+    private Node node;
+    private Node first;
+    private Node last;
+    private Integer size;
+
+    public LinkedList(){
+        this(null);
+        this.size = 0;
+    }
+
+    public LinkedList(E first){
+        node = new Node<>(first);
+        this.size = 1;
+    }
+
     /**
      * ,* Gir det første elementet i listen.
      * ,*
