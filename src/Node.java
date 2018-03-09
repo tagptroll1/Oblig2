@@ -1,6 +1,6 @@
 public class Node<E> {
     private E data;
-    private Node next;
+    private Node<E> next;
 
     public Node(){
         this(null, null);
@@ -10,7 +10,7 @@ public class Node<E> {
         this(info, null);
     }
 
-    public Node(E info, Node next){
+    public Node(E info, Node<E> next){
         this.data = info;
         this.next = next;
     }
@@ -19,16 +19,23 @@ public class Node<E> {
         this.data = info;
     }
 
-    public E getDate(){
+    public E getData(){
         return this.data;
     }
 
-    public void changeNext(Node next){
+    public void changeNext(Node<E> next){
         this.next = next;
     }
 
-    public Node getNext(){
+    public Node<E> getNext(){
         return this.next;
     }
 
+    public boolean hasNext(){
+        if (this.next == null){
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
