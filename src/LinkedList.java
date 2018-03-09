@@ -6,25 +6,19 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class LinkedList<E> implements IList<E>{
-    private Node<E> node;
-    private int numOfEntries;
-    private Node<E> first;
-    private Node<E> last;
+    private Node node;
+    private Node first;
+    private Node last;
+    private Integer size;
 
     public LinkedList(){
         this(null);
-        numOfEntries = 0;
+        this.size = 0;
     }
-    public LinkedList(E first){
-        node = new Node<>(first, null);
-        this.first = node;
-        numOfEntries = 1;
-    }
-    public LinkedList(E first, LinkedList<E> resten){
-        resten.put(first());
-        this.last = resten.lastNode();
-        numOfEntries = resten.size() + 1;
 
+    public LinkedList(E first){
+        node = new Node<>(first);
+        this.size = 1;
     }
 
     /**
@@ -36,23 +30,9 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public E first() throws NoSuchElementException {
-        if (numOfEntries <= 0){
-            throw new NoSuchElementException("No elements in list");
-        }
-        return this.first.getData();
+        return null;
     }
 
-    public E last() throws NoSuchElementException {
-        return this.last.getData();
-    }
-
-    private Node<E> lastNode(){
-        return this.last;
-    }
-
-    private Node<E> firstNode(){
-        return this.first;
-    }
     /**
      * ,* Returnerer alle elementene i listen bortsett fra det
      * ,* første.
@@ -254,7 +234,7 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public int size() {
-        return numOfEntries;
+        return 0;
     }
 
     /**
