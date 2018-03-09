@@ -1,4 +1,3 @@
-
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
@@ -79,7 +78,7 @@ public interface IList<E> extends Iterable<E> {
      * ,* @param listen som blir lagt til.
      * ,
      */
-    void append(IList<? super E> list);
+    void append(IList<? extends E> list);
 
     /**
      * ,* Legger til alle elementene i den angitte listen på
@@ -88,7 +87,7 @@ public interface IList<E> extends Iterable<E> {
      * ,* @param list listen som blir lagt til
      * ,
      */
-    void prepend(IList<? super E> list);
+    void prepend(IList<? extends E> list);
 
     /**
      * ,* Slår sammen flere lister
@@ -98,7 +97,7 @@ public interface IList<E> extends Iterable<E> {
      * ,* skal slås sammen.
      * ,
      */
-    IList<E> concat(IList<? super E>... lists);
+    IList<E> concat(IList<? extends E>... lists);
 
     /**
      * ,* Sorterer listen ved hjelp av en
@@ -135,10 +134,7 @@ public interface IList<E> extends Iterable<E> {
      * ,* kombinasjonsfunksjon.
      * ,*
      * ,* @param t Det første elementet i sammenslåingen
-     * ,* @param accum Funksjonen som holder styr på de
-     * ,* sammenslåtte elementene
-     * ,* @param combiner funksjonen som slår sammen to
-     * ,* elementer
+     * ,* @param f funksjonen som slår sammen elementene
      * ,* @return Den akkumulerte verdien av sammenslåingene
      * ,
      */

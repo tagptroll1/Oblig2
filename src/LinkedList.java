@@ -27,8 +27,8 @@ public class LinkedList<E> implements IList<E>{
     }
 
     public LinkedList(E first, IList<E> list){
-        this.first = new Node(first);
-
+        prepend(list);
+        put(first);
     }
 
     /**
@@ -55,13 +55,11 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public IList<E> rest() {
-        IList<E> tempList;
-
         if (size <= 1){
-          return tempList = new LinkedList<>();
+          return new LinkedList<>();
         }
         Node<E> firstNew = first.getNext();
-        tempList = new LinkedList<>();
+        IList<E> tempList = new LinkedList<>();
         while (true){
             if (firstNew.hasNext()){
                 node = new Node<>(firstNew.getData(), firstNew.getNext());
@@ -192,18 +190,9 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public boolean contains(Object o) {
-        Node<E> startNode = first;
-        if (o.equals(first.getData())){
-            return true;
-        }
-        while (true){
-            if (o.equals(startNode.getData())){
+        for (E item : this){
+            if (o.equals(item)){
                 return true;
-            }
-            if (startNode.hasNext()){
-                startNode = startNode.getNext();
-            } else {
-                break;
             }
         }
         return false;
@@ -234,8 +223,13 @@ public class LinkedList<E> implements IList<E>{
      * @param list
      */
     @Override
-    public void append(IList<? super E> list) {
+    public void append(IList<? extends E> list) {
+        if (list.isEmpty()) return;
 
+        for (E item : list){
+            add(item);
+            size++;
+        }
     }
 
     /**
@@ -248,8 +242,13 @@ public class LinkedList<E> implements IList<E>{
      * @param list
      */
     @Override
-    public void prepend(IList<? super E> list) {
+    public void prepend(IList<? extends E> list) {
+        if (list.isEmpty()) return;
 
+        for (E item : list){
+            put(item);
+            size++;
+        }
     }
 
     /**
@@ -263,8 +262,14 @@ public class LinkedList<E> implements IList<E>{
      * @param lists
      */
     @Override
-    public IList<E> concat(IList<? super E>... lists) {
-        return null;
+    public IList<E> concat(IList<? extends E>... lists) {
+        IList<E> newList = new LinkedList<>();
+        for (IList<? extends  E> list : lists){
+            for (E item : list){
+                newList.add(item);
+            }
+        }
+        return  newList;
     }
 
     /**
@@ -348,7 +353,9 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public void clear() {
-
+        first = null;
+        last = null;
+        size = 0;
     }
 
     /**
@@ -359,16 +366,35 @@ public class LinkedList<E> implements IList<E>{
     @Override
     public Iterator<E> iterator() {
         return new Iterator<>() {
+            Node<E> start = first;
+
             @Override
             public boolean hasNext() {
-
-                return false;
+                return start != null && start.getData() != null;
             }
 
             @Override
             public E next() {
-                return null;
+                if (start == null || start.getData() == null ) throw new NoSuchElementException();
+                E temp = start.getData();
+                start = start.getNext();
+                return temp;
             }
         };
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n---------------------\n");
+        sb.append("First: ").append(first.getData()).append(("\n"));
+        sb.append("Last: ").append(last.getData()).append(("\n"));
+        sb.append("Size: ").append(size).append("\n");
+        for (E item : this){
+            sb.append(item.toString());
+            sb.append(", ");
+        }
+        sb.append("\n---------------------");
+        return sb.toString();
     }
 }
