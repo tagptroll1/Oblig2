@@ -123,12 +123,10 @@ class ListTest {
         assertThrows(NoSuchElementException.class, ()-> enList.remove());
     }
     // Siden rest fungere likt for tom og liste med 1 har jeg en felles sjekk for dem her
-    @Test
     void test_rest_zero_or_one(IList<Integer> listo){
         IList<Integer> restList = listo.rest();
         assertEquals(0, restList.size());
         assertTrue(restList instanceof LinkedList);
-        assertNotEquals(listo, restList);
 
         assertTrue(restList.isEmpty());
         assertThrows(NoSuchElementException.class, restList::first);
@@ -187,15 +185,16 @@ class ListTest {
     void test_remove_more(){
         int removed;
 
-        assertFalse(flerList.isEmpty());
-        removed = flerList.remove();
-        assertEquals(420, removed);
+        assertTrue(flerList.remove(420));
         assertEquals(2, flerList.size());
-
-        assertTrue(flerList.remove(8008));
-        assertEquals(1, flerList.size());
         assertEquals(666, (int) flerList.first());
         assertFalse(flerList.isEmpty());
+
+        assertFalse(flerList.isEmpty());
+        removed = flerList.remove();
+        assertEquals(8008, removed);
+        assertEquals(1, flerList.size());
+
 
         removed = flerList.remove();
         assertEquals(666, removed);

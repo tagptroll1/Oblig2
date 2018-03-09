@@ -1,3 +1,4 @@
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -6,19 +7,28 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class LinkedList<E> implements IList<E>{
-    private Node node;
-    private Node first;
-    private Node last;
+    private Node<E> node;
+    private Node<E> first;
+    private Node<E> last;
     private Integer size;
 
     public LinkedList(){
-        this(null);
+        node = new Node<>();
+        this.first = node;
+        this.last = node;
         this.size = 0;
     }
 
     public LinkedList(E first){
         node = new Node<>(first);
+        this.first = node;
+        this.last = node;
         this.size = 1;
+    }
+
+    public LinkedList(E first, IList<E> list){
+        this.first = new Node(first);
+
     }
 
     /**
@@ -29,8 +39,11 @@ public class LinkedList<E> implements IList<E>{
      * ,
      */
     @Override
-    public E first() throws NoSuchElementException {
-        return null;
+    public E first(){
+        if (size <= 0){
+            throw new NoSuchElementException("List is empty");
+        }
+        return this.first.getData();
     }
 
     /**
@@ -42,7 +55,30 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public IList<E> rest() {
-        return null;
+        IList<E> tempList;
+
+        if (size <= 1){
+          return tempList = new LinkedList<>();
+        }
+        Node<E> firstNew = first.getNext();
+        tempList = new LinkedList<>();
+        while (true){
+            if (firstNew.hasNext()){
+                node = new Node<>(firstNew.getData(), firstNew.getNext());
+            } else {
+                node = new Node<>(firstNew.getData(), null);
+            }
+            tempList.add(node.getData());
+            if (node.hasNext()){
+                firstNew = firstNew.getNext();
+            } else {
+                break;
+            }
+        }
+
+
+        return tempList;
+
     }
 
     /**
@@ -53,7 +89,14 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public boolean add(E elem) {
-        return false;
+        node = new Node<>(elem);
+        last.changeNext(node);
+        if (isEmpty()){
+            first = node;
+        }
+        last = node;
+        size++;
+        return true;
     }
 
     /**
@@ -64,7 +107,13 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public boolean put(E elem) {
-        return false;
+        node = new Node<>(elem, first);
+        if (isEmpty()){
+            last = node;
+        }
+        first = node;
+        size++;
+        return true;
     }
 
     /**
@@ -75,8 +124,20 @@ public class LinkedList<E> implements IList<E>{
      * ,
      */
     @Override
-    public E remove() throws NoSuchElementException {
-        return null;
+    public E remove() {
+        if (isEmpty()){
+            throw new NoSuchElementException("List is empty");
+        }
+
+        Node<E> tempStart = first;
+        if (first.hasNext()){
+            first = first.getNext();
+        } else {
+            first = null;
+        }
+        size--;
+
+        return tempStart.getData();
     }
 
     /**
@@ -91,6 +152,32 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public boolean remove(Object o) {
+        Node<E> startNode = first;
+        if (o.equals(startNode.getData())){
+            first = startNode.getNext();
+            size--;
+            return true;
+        }
+        if (o.equals(last)){
+            while(startNode.getNext() != last){
+                startNode = startNode.getNext();
+            }
+            last = startNode;
+            size--;
+        }
+        while (true){
+            if (o.equals(startNode.getNext().getData())){
+                startNode.changeNext(startNode.getNext().getNext());
+                size--;
+
+                return true;
+            }
+            if (startNode.hasNext()){
+                startNode = startNode.getNext();
+            } else {
+                break;
+            }
+        }
         return false;
     }
 
@@ -105,6 +192,20 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public boolean contains(Object o) {
+        Node<E> startNode = first;
+        if (o.equals(first.getData())){
+            return true;
+        }
+        while (true){
+            if (o.equals(startNode.getData())){
+                return true;
+            }
+            if (startNode.hasNext()){
+                startNode = startNode.getNext();
+            } else {
+                break;
+            }
+        }
         return false;
     }
 
@@ -116,7 +217,11 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public boolean isEmpty() {
-        return false;
+        if (size <= 0){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -234,7 +339,7 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     /**
