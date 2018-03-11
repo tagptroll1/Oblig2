@@ -1,7 +1,4 @@
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -27,7 +24,7 @@ public class LinkedList<E> implements IList<E>{
     }
 
     public LinkedList(E first, IList<E> list){
-        prepend(list);
+        append(list);
         put(first);
     }
 
@@ -41,9 +38,16 @@ public class LinkedList<E> implements IList<E>{
     @Override
     public E first(){
         if (size <= 0){
-            throw new NoSuchElementException("List is empty");
+            throw new NoSuchElementException("List is empty");      //O(1)
         }
-        return this.first.getData();
+        return this.first.getData();                                //O(1)
+    }
+
+    public E last(){
+        if (size <= 0){
+            throw new NoSuchElementException("List is empty");      //O(1)
+        }
+        return this.last.getData();                                 //O(1)
     }
 
     /**
@@ -54,28 +58,27 @@ public class LinkedList<E> implements IList<E>{
      * ,
      */
     @Override
-    public IList<E> rest() {
+    public IList<E> rest() {                                        //O(n)
         if (size <= 1){
-          return new LinkedList<>();
+            // returner en tom liste om det er 0 eller 1 elementer i originalen.
+          return new LinkedList<>();                                //O(1)
         }
-        Node<E> firstNew = first.getNext();
-        IList<E> tempList = new LinkedList<>();
-        while (true){
+        // skip første elemntet
+        Node<E> firstNew = first.getNext();                         //O(1)
+        IList<E> tempList = new LinkedList<>();                     //O(1)
+        // Iterer gjennom alt utensom first og lag ny liste med
+        while (firstNew != null){                                   //O(n)
             if (firstNew.hasNext()){
-                node = new Node<>(firstNew.getData(), firstNew.getNext());
+                node = new Node<>(firstNew.getData(), firstNew.getNext());  //O(1)
             } else {
-                node = new Node<>(firstNew.getData(), null);
+                node = new Node<>(firstNew.getData(), null);   //O(1)
             }
-            tempList.add(node.getData());
-            if (node.hasNext()){
-                firstNew = firstNew.getNext();
-            } else {
-                break;
-            }
+            tempList.add(node.getData());                           //O(1)
+            firstNew = firstNew.getNext();                          //O(1)
         }
 
 
-        return tempList;
+        return tempList;                                            //O(1)
 
     }
 
@@ -86,15 +89,16 @@ public class LinkedList<E> implements IList<E>{
      * @param elem
      */
     @Override
-    public boolean add(E elem) {
-        node = new Node<>(elem);
-        last.changeNext(node);
-        if (isEmpty()){
-            first = node;
+    public boolean add(E elem) {                                    //O(1)
+        node = new Node<>(elem);                                    //O(1)
+        if (isEmpty()){                                             //O(1)
+            first = node;                                           //O(1)
+        } else {
+            last.changeNext(node);                                  //O(1)
         }
-        last = node;
-        size++;
-        return true;
+        last = node;                                                //O(1)
+        size++;                                                     //O(1)
+        return true;                                                //O(1)
     }
 
     /**
@@ -104,14 +108,14 @@ public class LinkedList<E> implements IList<E>{
      * @param elem
      */
     @Override
-    public boolean put(E elem) {
-        node = new Node<>(elem, first);
-        if (isEmpty()){
-            last = node;
+    public boolean put(E elem) {                                    //O(1)
+        node = new Node<>(elem, first);                             //O(1)
+        if (isEmpty()){                                             //O(1)
+            last = node;                                            //O(1)
         }
-        first = node;
-        size++;
-        return true;
+        first = node;                                               //O(1)
+        size++;                                                     //O(1)
+        return true;                                                //O(1)
     }
 
     /**
@@ -122,20 +126,20 @@ public class LinkedList<E> implements IList<E>{
      * ,
      */
     @Override
-    public E remove() {
-        if (isEmpty()){
-            throw new NoSuchElementException("List is empty");
+    public E remove() {                                             //O(1)
+        if (isEmpty()){                                             //O(1)
+            throw new NoSuchElementException("List is empty");      //O(1)
         }
 
-        Node<E> tempStart = first;
-        if (first.hasNext()){
-            first = first.getNext();
+        Node<E> tempStart = first;                                  //O(1)
+        if (first.hasNext()){                                       //O(1)
+            first = first.getNext();                                //O(1)
         } else {
-            first = null;
+            first = null;                                           //O(1)
         }
-        size--;
+        size--;                                                     //O(1)
 
-        return tempStart.getData();
+        return tempStart.getData();                                 //O(1)
     }
 
     /**
@@ -149,34 +153,35 @@ public class LinkedList<E> implements IList<E>{
      * @param o
      */
     @Override
-    public boolean remove(Object o) {
-        Node<E> startNode = first;
-        if (o.equals(startNode.getData())){
-            first = startNode.getNext();
-            size--;
+    public boolean remove(Object o) {                               //O(n)
+        Node<E> startNode = first;                                  //O(1)
+        // Hvis første noden er den vi vil slette
+        if (o.equals(startNode.getData())){                         //O(1)
+            first = startNode.getNext();                            //O(1)
+            size--;                                                 //O(1)
+            return true;                                            //O(1)
+        }
+        // Hvis siste noden er den vi vil slette
+        if (o.equals(last)){                                        //O(1)
+            while(startNode.getNext() != last){                     //O(n)
+                startNode = startNode.getNext();                    //O(1)
+            }
+            last = startNode;                                       //O(1)
+            size--;                                                 //O(1)
             return true;
         }
-        if (o.equals(last)){
-            while(startNode.getNext() != last){
-                startNode = startNode.getNext();
-            }
-            last = startNode;
-            size--;
-        }
-        while (true){
-            if (o.equals(startNode.getNext().getData())){
-                startNode.changeNext(startNode.getNext().getNext());
-                size--;
+        // Ellers iterer gjennom alt
+        while (startNode!=null){                                    //O(n)
+            if (o.equals(startNode.getNext().getData())){           //O(1)
+                startNode.changeNext(startNode.getNext().getNext());//O(1)
+                size--;                                             //O(1)
 
-                return true;
+                return true;                                        //O(1)
             }
-            if (startNode.hasNext()){
-                startNode = startNode.getNext();
-            } else {
-                break;
-            }
+            startNode = startNode.getNext();                        //O(1)
+
         }
-        return false;
+        return false;                                               //O(1)
     }
 
     /**
@@ -189,13 +194,14 @@ public class LinkedList<E> implements IList<E>{
      * @param o
      */
     @Override
-    public boolean contains(Object o) {
-        for (E item : this){
-            if (o.equals(item)){
-                return true;
+    public boolean contains(Object o) {                             //O(n)
+        // Enkel iterasjon og sammenligning
+        for (E item : this){                                        //O(n)
+            if (o.equals(item)){                                    //O(1)
+                return true;                                        //O(1)
             }
         }
-        return false;
+        return false;                                               //O(1)
     }
 
     /**
@@ -205,11 +211,11 @@ public class LinkedList<E> implements IList<E>{
      * ,
      */
     @Override
-    public boolean isEmpty() {
-        if (size <= 0){
-            return true;
+    public boolean isEmpty() {                                      //O(1)
+        if (size <= 0){                                             //O(1)
+            return true;                                            //O(1)
         } else {
-            return false;
+            return false;                                           //O(1)
         }
     }
 
@@ -223,12 +229,13 @@ public class LinkedList<E> implements IList<E>{
      * @param list
      */
     @Override
-    public void append(IList<? extends E> list) {
-        if (list.isEmpty()) return;
+    public void append(IList<? extends E> list) {                   //O(n)
+        if (list.isEmpty()) return;                                 //O(1)
 
-        for (E item : list){
-            add(item);
-            size++;
+        for (E item : list){                                        //O(n)
+            if (item != null) {                                     //O(1)
+                add(item);                                          //O(1)
+            }
         }
     }
 
@@ -242,12 +249,11 @@ public class LinkedList<E> implements IList<E>{
      * @param list
      */
     @Override
-    public void prepend(IList<? extends E> list) {
-        if (list.isEmpty()) return;
+    public void prepend(IList<? extends E> list) {                  //O(n)
+        if (list.isEmpty()) return;                                 //O(1)
 
-        for (E item : list){
-            put(item);
-            size++;
+        for (E item : list){                                        //O(n)
+            put(item);                                              //O(1)
         }
     }
 
@@ -262,14 +268,13 @@ public class LinkedList<E> implements IList<E>{
      * @param lists
      */
     @Override
-    public IList<E> concat(IList<? extends E>... lists) {
-        IList<E> newList = new LinkedList<>();
-        for (IList<? extends  E> list : lists){
-            for (E item : list){
-                newList.add(item);
-            }
+    public IList<E> concat(IList<? extends E>... lists) {           //O(n*m)
+        IList<E> newList = new LinkedList<>();                      //O(1)
+        // For hver liste, append listen
+        for (IList<? extends  E> list : lists){                     //O(n)
+            newList.append(list);                                   //Append er O(m)
         }
-        return  newList;
+        return  newList;                                            //O(1)
     }
 
     /**
@@ -281,10 +286,18 @@ public class LinkedList<E> implements IList<E>{
      *
      * @param c
      */
-    @Override
-    public void sort(Comparator<? super E> c) {
 
+    @Override
+    public void sort(Comparator<? super E> c) {                     //O(n log(n)) bestcase
+
+        E[] a = this.toArray();                                     //O(n)
+        Arrays.sort(a, c);                                          //O(n log(n))
+        clear();                                                    //O(1)
+        for (int i = 0; i < a.length; i++) {                        //O(n)
+            add(a[i]);                                              //O(1)
+        }
     }
+
 
     /**
      * ,* Fjerner elementer fra listen som svarer til et
@@ -296,8 +309,12 @@ public class LinkedList<E> implements IList<E>{
      * @param filter
      */
     @Override
-    public void filter(Predicate<? super E> filter) {
-
+    public void filter(Predicate<? super E> filter) {               //O(n)
+        for (E item : this){                                        //O(n)
+            if(filter.test(item)){                                  //O(1)
+                remove(item);                                       //O(1)
+            }
+        }
     }
 
     /**
@@ -312,8 +329,14 @@ public class LinkedList<E> implements IList<E>{
      * @param f
      */
     @Override
-    public <U> IList<U> map(Function<? super E, ? extends U> f) {
-        return null;
+    public <U> IList<U> map(Function<? super E, ? extends U> f) {   //O(n)
+        IList<U> newList = new LinkedList<>();                      //O(1)
+
+        for (E item : this){                                        //O(n)
+            U result = f.apply(item);                               //O(1)
+            newList.add(result);                                    //O(1)
+        }
+        return newList;                                             //O(1)
     }
 
     /**
@@ -321,19 +344,17 @@ public class LinkedList<E> implements IList<E>{
      * ,* kombinasjonsfunksjon.
      * ,*
      * ,* @param t Det første elementet i sammenslåingen
-     * ,* @param accum Funksjonen som holder styr på de
-     * ,* sammenslåtte elementene
-     * ,* @param combiner funksjonen som slår sammen to
-     * ,* elementer
+     * ,* @param f funksjonen som slår sammen elementene
      * ,* @return Den akkumulerte verdien av sammenslåingene
      * ,
-     *
-     * @param t
-     * @param f
      */
     @Override
-    public <T> T reduce(T t, BiFunction<T, ? super E, T> f) {
-        return null;
+    public <T> T reduce(T t, BiFunction<T, ? super E, T> f) {       //O(n)
+        T reduced = t;                                              //O(1)
+        for (E item : this) {                                       //O(n)
+             reduced = f.apply(reduced, item);                      //O(1)
+        }
+        return reduced;                                             //O(1)
     }
 
     /**
@@ -343,8 +364,8 @@ public class LinkedList<E> implements IList<E>{
      * ,
      */
     @Override
-    public int size() {
-        return size;
+    public int size() {                                             //O(1)
+        return size;                                                //O(1)
     }
 
     /**
@@ -352,10 +373,21 @@ public class LinkedList<E> implements IList<E>{
      * ,
      */
     @Override
-    public void clear() {
-        first = null;
-        last = null;
-        size = 0;
+    public void clear() {                                           //O(1)
+        first = null;                                               //O(1)
+        last = null;                                                //O(1)
+        size = 0;                                                   //O(1)
+    }
+
+    //Skrev denne litt på gøy
+    @SuppressWarnings("unchecked")
+    public E[] toArray(){                                           //O(n)
+        E[]result = (E[])new Object[size];                          //O(1)
+        Iterator i = this.iterator();                               //O(1)
+        for (int j = 0; j < result.length; j++) {                   //O(n)
+            result[j] = (E) i.next();                               //O(1)
+        }
+        return result;                                              //O(1)
     }
 
     /**
@@ -366,6 +398,7 @@ public class LinkedList<E> implements IList<E>{
     @Override
     public Iterator<E> iterator() {
         return new Iterator<>() {
+            Node<E> prev = first;
             Node<E> start = first;
 
             @Override
@@ -377,24 +410,29 @@ public class LinkedList<E> implements IList<E>{
             public E next() {
                 if (start == null || start.getData() == null ) throw new NoSuchElementException();
                 E temp = start.getData();
+                prev = start;
                 start = start.getNext();
                 return temp;
+            }
+
+            @Override
+            public void remove(){
+                if(start != null ) {
+                    if (start == last) {
+                        prev.changeNext(null);
+                        last = prev;
+                        size--;
+                    } else if (start == first) {
+                        prev.changeNext(start.getNext());
+                        first = prev;
+                        size--;
+                    } else {
+                        prev.changeNext(start.getNext());
+                        size--;
+                    }
+                }
             }
         };
     }
 
-    @Override
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n---------------------\n");
-        sb.append("First: ").append(first.getData()).append(("\n"));
-        sb.append("Last: ").append(last.getData()).append(("\n"));
-        sb.append("Size: ").append(size).append("\n");
-        for (E item : this){
-            sb.append(item.toString());
-            sb.append(", ");
-        }
-        sb.append("\n---------------------");
-        return sb.toString();
-    }
 }
