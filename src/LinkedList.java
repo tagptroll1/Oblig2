@@ -43,12 +43,6 @@ public class LinkedList<E> implements IList<E>{
         return this.first.getData();                                //O(1)
     }
 
-    public E last(){
-        if (size <= 0){
-            throw new NoSuchElementException("List is empty");      //O(1)
-        }
-        return this.last.getData();                                 //O(1)
-    }
 
     /**
      * ,* Returnerer alle elementene i listen bortsett fra det
@@ -269,8 +263,8 @@ public class LinkedList<E> implements IList<E>{
      */
     @Override
     public IList<E> concat(IList<? extends E>... lists) {           //O(n*m)
-        IList<E> newList = new LinkedList<>();                      //O(1)
-        // For hver liste, append listen
+        IList<E> newList = new LinkedList<>();
+
         for (IList<? extends  E> list : lists){                     //O(n)
             newList.append(list);                                   //Append er O(m)
         }
@@ -288,14 +282,29 @@ public class LinkedList<E> implements IList<E>{
      */
 
     @Override
-    public void sort(Comparator<? super E> c) {                     //O(n log(n)) bestcase
-
-        E[] a = this.toArray();                                     //O(n)
-        Arrays.sort(a, c);                                          //O(n log(n))
-        clear();                                                    //O(1)
-        for (int i = 0; i < a.length; i++) {                        //O(n)
-            add(a[i]);                                              //O(1)
+    public void sort(Comparator<? super E> c) {                     //O(n^2)
+        E[] a = this.toArray();
+        // Bubble sort arrayet med å swappe 2 verdier
+        for (E item : a){                                           //O(n^2)
+            for (int i = 0; i < a.length-1; i++) {
+                if (c.compare(a[i], a[i+1]) > 0 ){
+                    swap(a, i, i+1);
+                }
+            }
         }
+        clear();                                                    //O(1)
+        // Clear listen og legg til alle elementene i arrayet.
+        for (E item: a) {                                           //O(n)
+            add(item);                                              //O(1)
+        }
+    }
+
+
+    private void swap(E[] a, int first, int second){                //O(1)
+        E firstData = a[first];
+        E secondData = a[second];
+        a[first] = secondData;
+        a[second] = firstData;
     }
 
 
